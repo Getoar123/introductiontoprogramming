@@ -1,145 +1,147 @@
-# starter.py — Survey Dashboard
-# Project 4 | Hard | 60–90 minutes (split across 2 sessions)
-#
-# Run from this folder:
-#   python starter.py
-#
-# Split the work across four roles — see README.md for the role breakdown.
-
 import csv
 import sqlite3
 
-# ══════════════════════════════════════════════════════════════════════════════
-# STEP 1 — CREATE THE DATABASE AND TABLE
-# (Coder A)
-# ══════════════════════════════════════════════════════════════════════════════
-
+# -----------------------------
+# 1. CREATE DATABASE
+# -----------------------------
 conn = sqlite3.connect("survey.db")
-db   = conn.cursor()
+cur = conn.cursor()
 
-# TODO: Create the responses table if it doesn't already exist
-# Columns: student_id TEXT, faculty TEXT, year INTEGER,
-#          satisfaction INTEGER, favourite_tool TEXT, comments TEXT
-#
-# Hint:
-# db.execute('''CREATE TABLE IF NOT EXISTS responses (
-#     ...
-# )''')
+cur.execute("""
+DROP TABLE IF EXISTS responses
+""")
 
+cur.execute("""
+CREATE TABLE responses (
+    student_id TEXT,
+    faculty TEXT,
+    year INTEGER,
+    satisfaction INTEGER,
+    favourite_tool TEXT,
+    comments TEXT
+)
+""")
 
-# ══════════════════════════════════════════════════════════════════════════════
-# STEP 2 — READ ALL THREE CSV FILES AND INSERT ROWS
-# (Coder A)
-# ══════════════════════════════════════════════════════════════════════════════
-
-csv_files = [
+# -----------------------------
+# 2. LOAD CSV FILES
+# -----------------------------
+files = [
     "faculty_science.csv",
     "faculty_arts.csv",
-    "faculty_business.csv",
+    "faculty_business.csv"
 ]
 
-for filename in csv_files:
+for filename in files:
     with open(filename, "r") as file:
         reader = csv.DictReader(file)
+
         for row in reader:
-            # TODO: Insert each row into the responses table
-            # Use ? placeholders — NEVER string formatting for SQL
-            # db.execute("INSERT INTO responses VALUES (?, ?, ?, ?, ?, ?)", (...))
-            pass
+            cur.execute("""
+                INSERT INTO responses 
+                (student_id, faculty, year, satisfaction, favourite_tool, comments)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (
+                row["student_id"],
+                row["faculty"],
+                int(row["year"]),
+                int(row["satisfaction"]),
+                row["favourite_tool"],
+                row["comments"]
+            ))
 
 conn.commit()
-print("Database loaded successfully.\n")
 
+# -----------------------------
+# 3. DASHBOARD QUERIES
+# -----------------------------
 
-# ══════════════════════════════════════════════════════════════════════════════
-# STEP 3 — DASHBOARD QUERIES
-# ══════════════════════════════════════════════════════════════════════════════
-
-print("=" * 30)
+print("\n==============================")
 print("  UNIVERSITY SURVEY DASHBOARD")
-print("=" * 30)
+print("==============================\n")
 
-# ── Query 1: Total responses by faculty (Coder B) ────────────────────────────
-print("\n1. Total Responses by Faculty")
+# 1. Responses by faculty
+print("1. Total Responses by Faculty")
+rows = cur.execute("""
+    SELECT faculty, COUNT(*) 
+    FROM responses
+    GROUP BY faculty
+""").fetchall()
 
-# TODO: SELECT faculty, COUNT(*) AS n FROM responses GROUP BY faculty ORDER BY faculty
-rows = db.execute(???).fetchall()
 total = 0
 for row in rows:
-    # TODO: print each faculty and count, aligned
-    # TODO: add count to total
-    pass
-print(f"   {'TOTAL':<10}: {total}")
+    print(f"   {row[0]:8}: {row[1]}")
+    total += row[1]
+print(f"   TOTAL   : {total}\n")
 
+# 2. Avg satisfaction by year
+print("2. Average Satisfaction by Year of Study")
+rows = cur.execute("""
+    SELECT year, AVG(satisfaction)
+    FROM responses
+    GROUP BY year
+    ORDER BY year
+""").fetchall()
 
-# ── Query 2: Average satisfaction by year (Coder B) ──────────────────────────
-print("\n2. Average Satisfaction by Year of Study")
-
-# TODO: SELECT year, ROUND(AVG(satisfaction), 1) AS avg_sat
-#       FROM responses GROUP BY year ORDER BY year
-rows = db.execute(???).fetchall()
 for row in rows:
-    # TODO: print "   Year X : Y.Y / 5"
-    pass
-
-
-# ── Query 3: Favourite tool popularity (Coder B) ─────────────────────────────
-print("\n3. Favourite Tool Popularity")
-
-# TODO: SELECT favourite_tool, COUNT(*) AS n
-#       FROM responses GROUP BY favourite_tool ORDER BY n DESC
-rows = db.execute(???).fetchall()
-for row in rows:
-    # TODO: print each tool and count, right-aligned count
-    pass
-
-
-# ── Query 4: Faculty comparison table (Coder C) ──────────────────────────────
-print("\n4. Faculty Comparison")
-print(f"   {'Faculty':<12} | {'Avg Satisfaction':<18} | Most Popular Tool")
-print("   " + "-" * 50)
-
-# For each faculty, find average satisfaction and most popular tool
-# Hint: you may need two queries per faculty, or a subquery
-faculties = ["Arts", "Business", "Science"]
-for faculty in faculties:
-    # TODO: Query average satisfaction for this faculty (use ? placeholder)
-    avg_row = db.execute(
-        "SELECT ROUND(AVG(satisfaction), 1) AS avg FROM responses WHERE faculty = ?",
-        (faculty,)
-    ).fetchone()
-
-    # TODO: Query the most popular tool for this faculty
-    tool_row = db.execute(???).fetchone()
-
-    # TODO: Print the row
-    pass
-
-
-# ── Query 5: Interactive filter (Coder C) ────────────────────────────────────
+    print(f"   Year {row[0]} : {row[1]:.1f} / 5")
 print()
-try:
-    min_score = int(input("Enter minimum satisfaction score (1-5): "))
-except ValueError:
-    print("Invalid input. Defaulting to 4.")
-    min_score = 4
 
-# TODO: SELECT student_id, faculty, year, favourite_tool
-#       FROM responses WHERE satisfaction >= ?
-#       ORDER BY faculty, year
-# Use ? placeholder — min_score is user input
-rows = db.execute(???).fetchall()
+# 3. Favourite tool popularity
+print("3. Favourite Tool Popularity")
+rows = cur.execute("""
+    SELECT favourite_tool, COUNT(*)
+    FROM responses
+    GROUP BY favourite_tool
+    ORDER BY COUNT(*) DESC
+""").fetchall()
 
-print(f"\nStudents with satisfaction >= {min_score}:")
-if not rows:
-    print("  No results found.")
 for row in rows:
-    # TODO: print each result formatted as:
-    # "  S002 | Science  | Year 2 | Python"
-    pass
+    print(f"   {row[0]:6}: {row[1]} students")
+print()
 
+# 4. Faculty comparison
+print("4. Faculty Comparison")
+rows = cur.execute("""
+    SELECT faculty,
+           AVG(satisfaction),
+           favourite_tool,
+           COUNT(favourite_tool) as tool_count
+    FROM responses
+    GROUP BY faculty
+""").fetchall()
 
-# ══════════════════════════════════════════════════════════════════════════════
-# CLEANUP
-# ══════════════════════════════════════════════════════════════════════════════
+for row in rows:
+    faculty = row[0]
+    avg_sat = row[1]
+
+    # most popular tool per faculty (simple version)
+    tool = cur.execute("""
+        SELECT favourite_tool
+        FROM responses
+        WHERE faculty = ?
+        GROUP BY favourite_tool
+        ORDER BY COUNT(*) DESC
+        LIMIT 1
+    """, (faculty,)).fetchone()[0]
+
+    print(f"   {faculty:<8} | {avg_sat:.1f}             | {tool}")
+print()
+
+# -----------------------------
+# 5. INTERACTIVE QUERY
+# -----------------------------
+
+score = int(input("Enter minimum satisfaction score (1-5): "))
+
+print("Students with satisfaction >= 5:")
+
+rows = cur.execute("""
+    SELECT student_id, faculty, year, favourite_tool
+    FROM responses
+    WHERE satisfaction >= ?
+""", (score,)).fetchall()
+
+for row in rows:
+    print(f"   {row[0]} | {row[1]:8} | Year {row[2]} | {row[3]}")
+
 conn.close()
