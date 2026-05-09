@@ -3,77 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSS Styling Exercise</title>
+  <title>Getoar Sopa · CSS Styling Exercise</title>
 
-  <!-- TODO Task 1: Add a <link> to your Google Font here -->
-  <!-- TODO Task 1: Add a <link> to style.css here -->
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header id="hero">
-    <h1>CSS Styling Practice</h1>
-    <p>Making the web beautiful, one property at a time.</p>
+    <div class="hero-content">
+      <h1>Getoar Sopa</h1>
+      <p>
+        Learning frontend development through HTML, CSS, and JavaScript —
+        building clean, modern, and interactive web experiences.
+      </p>
+    </div>
   </header>
 
   <nav>
     <a href="#about">About</a>
-    <a href="#cards">Cards</a>
-    <a href="#list">List</a>
+    <a href="#cards">Projects</a>
+    <a href="#list">Skills</a>
   </nav>
 
   <main>
 
     <section id="about">
       <h2>About This Page</h2>
+
       <p class="intro">
-        This page exists for you to practice CSS. Style everything in <code>style.css</code>.
-        Try to make it look great without touching the HTML.
+        This page is part of my frontend practice journey. The goal is to style
+        everything using external CSS while learning selectors, layout, spacing,
+        typography, and responsive design principles.
       </p>
+
       <p>
-        CSS stands for <strong>Cascading Style Sheets</strong>. It controls how HTML elements
-        look — their colors, sizes, spacing, fonts, and layout. Without CSS, every website
-        would look like a plain text document from 1993.
+        CSS stands for <strong>Cascading Style Sheets</strong>. It controls how
+        HTML elements look — including colors, spacing, animations, fonts,
+        layouts, and responsiveness across different devices.
       </p>
+
       <p>
-        The first letter of this paragraph should be styled differently using a <em>pseudo-element</em>.
-        Every paragraph should be comfortable to read with good line-height and color.
+        Modern websites rely heavily on clean UI design and accessibility.
+        Styling isn't just about making things look good — it's also about
+        improving usability, readability, and user experience.
       </p>
     </section>
 
     <section id="cards">
       <h2>Styled Cards</h2>
+
       <div class="card-grid">
+
         <div class="card">
-          <h3>Card One</h3>
-          <p>This card should have padding, a border, a border-radius, and a margin.</p>
+          <h3>Frontend Development</h3>
+          <p>
+            Practicing semantic HTML and modern CSS techniques such as Flexbox,
+            Grid, transitions, and responsive layouts.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Card Two</h3>
-          <p>Each card should be visually distinct from the surrounding page content.</p>
+          <h3>Python & SQL</h3>
+          <p>
+            Building backend logic, handling CSV files, working with SQLite,
+            and learning how real applications manage data.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Card Three</h3>
-          <p>Cards can have a subtle shadow or background color to lift them off the page.</p>
+          <h3>Creative Projects</h3>
+          <p>
+            Combining programming with creativity to build projects that are
+            interactive, polished, and enjoyable to use.
+          </p>
         </div>
+
       </div>
     </section>
 
     <section id="list">
-      <h2>Alternating List</h2>
+      <h2>Core Skills</h2>
+
       <ul class="fancy-list">
-        <li>HTML — Structure</li>
-        <li>CSS — Presentation</li>
-        <li>JavaScript — Behavior</li>
+        <li>HTML — Semantic Structure</li>
+        <li>CSS — Styling & Layout</li>
+        <li>JavaScript — Interactivity</li>
         <li>Python — Backend Logic</li>
-        <li>SQL — Data Storage</li>
-        <li>Git — Version Control</li>
+        <li>SQL — Database Queries</li>
+        <li>Git & GitHub — Version Control</li>
       </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>Week 9 · Exercise 2 · CSS Styling</p>
+    <p>Week 9 · Exercise 2 · Created by Getoar Sopa</p>
   </footer>
 
 </body>
