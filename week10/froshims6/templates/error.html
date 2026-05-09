@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Error</title>
-</head>
-<body>
+{% extends "layout.html" %}
 
-    <h1>Error</h1>
+{% block body %}
 
-    <p>{{ message }}</p>
+<h1>Error</h1>
 
-    <a href="/">Go back</a>
+<p>{{ message }}</p>
 
-</body>
-</html>
+<a href="/">Go back</a>
+
+{% endblock %}
