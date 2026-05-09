@@ -1,17 +1,22 @@
-# Implements a registration form using a select menu without validating sport server-side
+from flask import Flask, render_template, request
 
-# TODO: Import Flask, render_template, and request from the flask package
+app = Flask(__name__)
 
-
-# TODO: Create the Flask app instance
-
-
-# TODO: Define a route for "/" that accepts GET requests
-#       and renders the index.html template
+SPORTS = ["Soccer", "Basketball", "Tennis", "Volleyball"]
 
 
-# TODO: Define a route for "/register" that accepts POST requests
-#       Inside the function:
-#         - Read "name" and "sport" from request.form
-#         - If either is missing or empty, render failure.html
-#         - Otherwise, render success.html
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html", sports=SPORTS)
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    name = request.form.get("name")
+    sport = request.form.get("sport")
+
+    # validation
+    if not name or sport not in SPORTS:
+        return render_template("failure.html")
+
+    return render_template("success.html", name=name, sport=sport)
