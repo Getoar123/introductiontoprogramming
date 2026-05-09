@@ -1,45 +1,32 @@
-# Stores registrants in a dictionary
-
-from flask import Flask, redirect, render_template, request
+from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
-REGISTRANTS = {}
+SPORTS = ["Soccer", "Basketball", "Tennis", "Volleyball"]
 
-SPORTS = [
-    "Basketball",
-    "Soccer",
-    "Ultimate Frisbee"
-]
+# in-memory storage (this is NEW)
+registrants = []
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
     return render_template("index.html", sports=SPORTS)
 
 
 @app.route("/register", methods=["POST"])
 def register():
-
-    # Validate name
     name = request.form.get("name")
-    if not name:
-        return render_template("error.html", message="Missing name")
-
-    # Validate sport
     sport = request.form.get("sport")
-    if not sport:
-        return render_template("error.html", message="Missing sport")
-    if sport not in SPORTS:
-        return render_template("error.html", message="Invalid sport")
 
-    # Remember registrant
-    REGISTRANTS[name] = sport
+    if not name or sport not in SPORTS:
+        return "Invalid registration", 400
 
-    # Confirm registration
+    # store in memory
+    registrants.append({"name": name, "sport": sport})
+
     return redirect("/registrants")
 
 
 @app.route("/registrants")
-def registrants():
-    return render_template("registrants.html", registrants=REGISTRANTS)
+def show_registrants():
+    return render_template("registrants.html", registrants=registrants)
