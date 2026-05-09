@@ -1,21 +1,12 @@
 # Project 1 — Temperature Converter
-# Author: your name here
-# Date:   session date here
-#
-# Instructions:
-#   1. Read the README.md in this folder first.
-#   2. Fill in the missing lines below.
-#   3. Test with: 0°C → 32°F | 100°C → 212°F | -40°C → -40°F
+# Author: Getoar Sopa
+# Branch: getoar-project1
 
-# ── Your solution goes here ───────────────────────────────────────────────────
-
+# Step 1 — Get input from the user and convert to float
 celsius = float(input("Enter temperature in Celsius: "))
 
-# TODO: calculate fahrenheit using the formula F = (C × 9/5) + 32
-# fahrenheit = ...
+# Step 2 — Apply the formula
+fahrenheit = (celsius * 9/5) + 32
 
-# TODO: print the result using an f-string
-# print(f"...")
-
-# ── Bonus (optional) ─────────────────────────────────────────────────────────
-# Add a direction menu (C→F or F→C)
+# Step 3 — Print the result using an f-string
+print(f"{celsius}°C = {fahrenheit}°F")
