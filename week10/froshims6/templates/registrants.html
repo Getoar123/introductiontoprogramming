@@ -1,28 +1,43 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrants</title>
+</head>
+<body>
 
-{% block body %}
     <h1>Registrants</h1>
-    <table>
-        <thead>
+
+    {% if registrants|length == 0 %}
+        <p>No one registered yet.</p>
+    {% else %}
+        <table border="1" cellpadding="8">
             <tr>
                 <th>Name</th>
                 <th>Sport</th>
-                <th></th>
+                <th>Action</th>
             </tr>
-        </thead>
-        <tbody>
+
             {% for registrant in registrants %}
-                <tr>
-                    <td>{{ registrant["name"] }}</td>
-                    <td>{{ registrant["sport"] }}</td>
-                    <td>
-                        <form action="/deregister" method="post">
-                            <input name="id" type="hidden" value="{{ registrant.id }}">
-                            <button type="submit">Deregister</button>
-                        </form>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ registrant.name }}</td>
+                <td>{{ registrant.sport }}</td>
+                <td>
+
+                    <form action="/deregister" method="post">
+                        <input type="hidden" name="id" value="{{ registrant.id }}">
+                        <button type="submit">Deregister</button>
+                    </form>
+
+                </td>
+            </tr>
             {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
+
+        </table>
+    {% endif %}
+
+    <br>
+    <a href="/">Back to register</a>
+
+</body>
+</html>
