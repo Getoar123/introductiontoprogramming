@@ -2,11 +2,9 @@
 
 {% block body %}
 
-    hello,
-    {% if name %}
-        {{ name }}
-    {% else %}
-        world
-    {% endif %}
+    <h1>Greeting Page</h1>
+    <h2>Hello, {{ name }}!</h2>
+
+    <a href="/">Go back</a>
 
 {% endblock %}
