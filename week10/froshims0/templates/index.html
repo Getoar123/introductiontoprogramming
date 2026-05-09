@@ -1,15 +1,27 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Froshims0</title>
+</head>
+<body>
 
-{% block body %}
-    <h1>Register</h1>
+    <h1>Register for a Sport</h1>
 
-    <!-- TODO: Create an HTML form that posts to /register -->
+    <form action="/register" method="post">
 
-        <!-- TODO: Add a text input for the student's name -->
+        <input name="name" type="text" placeholder="Name" required>
 
-        <!-- TODO: Add a <select> dropdown for sport with a blank default
-                   option and at least 3 sport choices -->
+        <select name="sport">
+            <option value="">Select a sport</option>
+            {% for sport in sports %}
+                <option value="{{ sport }}">{{ sport }}</option>
+            {% endfor %}
+        </select>
 
-        <!-- TODO: Add a submit button -->
+        <button type="submit">Register</button>
 
-{% endblock %}
+    </form>
+
+</body>
+</html>
