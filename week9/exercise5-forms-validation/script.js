@@ -1,105 +1,136 @@
-/**
- * Exercise 5: Forms & Validation
- * ================================
- * Add real-time validation and submit handling.
- * Read README.md for full instructions.
- */
+const form = document.querySelector("#signup-form");
+const nameInput = document.querySelector("#name");
+const email = document.querySelector("#email");
+const password = document.querySelector("#password");
+const confirm = document.querySelector("#confirm");
+const age = document.querySelector("#age");
+const website = document.querySelector("#website");
+const country = document.querySelector("#country");
+const bio = document.querySelector("#bio");
+const terms = document.querySelector("#terms");
 
-const form = document.querySelector('#registration-form');
+const submitBtn = document.querySelector("#submit-btn");
+const success = document.querySelector("#success-message");
+const bioCounter = document.querySelector("#bio-counter");
+const strength = document.querySelector("#password-strength");
 
-// ============================================================
-// HELPER: Show or clear an error on a field
-// ============================================================
-function showError(inputId, message) {
-  // TODO: Add class 'invalid' to the input element
-  // TODO: Set the text of the corresponding error-msg span to `message`
+const inputs = document.querySelectorAll("input, select, textarea");
+
+function showError(input, msg) {
+  const error = input.nextElementSibling;
+  if (error) error.textContent = msg;
+  input.classList.add("invalid");
+  input.classList.remove("valid");
 }
 
-function clearError(inputId) {
-  // TODO: Remove class 'invalid', add class 'valid' to the input
-  // TODO: Clear the error-msg span text
+function clearError(input) {
+  const error = input.nextElementSibling;
+  if (error) error.textContent = "";
+  input.classList.remove("invalid");
+  input.classList.add("valid");
 }
-
-
-// ============================================================
-// TASK 2: Individual Field Validators
-// (Return true if valid, false if invalid)
-// ============================================================
 
 function validateName() {
-  // TODO: Get #full-name value
-  // If < 2 chars: showError, return false
-  // Else: clearError, return true
+  if (nameInput.value.length < 2) return showError(nameInput, "Name too short");
+  clearError(nameInput);
 }
 
 function validateEmail() {
-  // TODO: Get #email value
-  // Use regex /^[^\s@]+@[^\s@]+\.[^\s@]+$/ to test
-  // showError or clearError appropriately
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regex.test(email.value)) return showError(email, "Invalid email");
+  clearError(email);
 }
 
 function validatePassword() {
-  // TODO: Get #password value
-  // Must be 8+ chars AND contain at least one digit
-  // Update #password-strength indicator (Task 4)
+  const val = password.value;
+  const strong = /[A-Z]/.test(val) && /\d/.test(val);
+
+  if (val.length < 8) {
+    strength.textContent = "Weak";
+    strength.style.color = "red";
+  } else if (strong) {
+    strength.textContent = "Strong";
+    strength.style.color = "green";
+  } else {
+    strength.textContent = "Fair";
+    strength.style.color = "orange";
+  }
+
+  if (val.length < 8) return showError(password, "Min 8 chars");
+  clearError(password);
 }
 
-function validateConfirmPassword() {
-  // TODO: Get #password and #confirm-password values
-  // They must match
+function validateConfirm() {
+  if (confirm.value !== password.value)
+    return showError(confirm, "Passwords don't match");
+  clearError(confirm);
 }
 
 function validateAge() {
-  // TODO: Get #age value (convert to Number)
-  // Must be 18–120
+  if (age.value < 18 || age.value > 120)
+    return showError(age, "Age must be 18-120");
+  clearError(age);
+}
+
+function validateWebsite() {
+  if (website.value && !website.value.startsWith("https://"))
+    return showError(website, "Must start with https://");
+  clearError(website);
 }
 
 function validateCountry() {
-  // TODO: Get #country value
-  // Must not be the default empty option
+  if (!country.value) return showError(country, "Select a country");
+  clearError(country);
 }
 
 function validateTerms() {
-  // TODO: Get #terms checkbox
-  // Must be checked
+  if (!terms.checked) return showError(terms, "Must accept terms");
+  clearError(terms);
 }
 
+function validateBio() {
+  bioCounter.textContent = `${bio.value.length} / 200 characters`;
 
-// ============================================================
-// TASK 4: Password Strength Indicator
-// ============================================================
-function updatePasswordStrength(password) {
-  // TODO: Get #password-strength element
-  // Determine strength: weak / fair / strong
-  // Update element's class and text
+  if (bio.value.length > 200) {
+    bioCounter.style.color = "red";
+    submitBtn.disabled = true;
+  } else {
+    bioCounter.style.color = "black";
+    submitBtn.disabled = false;
+  }
 }
 
+// Events
+nameInput.addEventListener("input", validateName);
+email.addEventListener("input", validateEmail);
+password.addEventListener("input", validatePassword);
+confirm.addEventListener("input", validateConfirm);
+age.addEventListener("input", validateAge);
+website.addEventListener("input", validateWebsite);
+country.addEventListener("change", validateCountry);
+terms.addEventListener("change", validateTerms);
+bio.addEventListener("input", validateBio);
 
-// ============================================================
-// TASK 5: Bio Character Counter
-// ============================================================
-const bioTextarea = document.querySelector('#bio');
-// TODO: Add 'input' event listener to bioTextarea
-// Update #char-count text: "X / 200 characters"
-// If over 200: add 'over-limit' class, disable submit button
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
+  validateName();
+  validateEmail();
+  validatePassword();
+  validateConfirm();
+  validateAge();
+  validateWebsite();
+  validateCountry();
+  validateTerms();
+  validateBio();
 
-// ============================================================
-// TASK 2: Attach real-time listeners
-// ============================================================
-// TODO: Add 'blur' (or 'input') event listeners to each field
-// that call its validator function
+  const invalid = document.querySelector(".invalid");
 
+  if (invalid) {
+    invalid.scrollIntoView({ behavior: "smooth" });
+    return;
+  }
 
-// ============================================================
-// TASK 3: Submit Handler
-// ============================================================
-form.addEventListener('submit', function(event) {
-  event.preventDefault(); // Always prevent default first
-
-  // TODO: Run all validators and collect results
-  // const results = [validateName(), validateEmail(), ...]
-
-  // TODO: If all true → show #success-message, hide form
-  // TODO: If any false → scroll to first invalid field
+  success.classList.remove("hidden");
+  form.style.display = "none";
 });
