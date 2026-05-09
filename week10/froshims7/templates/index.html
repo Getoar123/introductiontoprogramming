@@ -1,16 +1,23 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    <!-- TODO: Create a form that POSTs to /register -->
+<h1>Register</h1>
 
-        <!-- TODO: Add a text input for name -->
+<form action="/register" method="post">
+    <input name="name" type="text" placeholder="Name">
 
-        <!-- TODO: Use a Jinja2 for loop to render one CHECKBOX per sport.
-                   All checkboxes must share name="sport" so multiple
-                   selections can be submitted together -->
+    <select name="sport">
+        <option disabled selected>Choose a sport</option>
+        {% for sport in sports %}
+            <option value="{{ sport }}">{{ sport }}</option>
+        {% endfor %}
+    </select>
 
-        <!-- TODO: Add a submit button -->
+    <button type="submit">Register</button>
+</form>
+
+<br>
+<a href="/registrants">View Registrants</a>
 
 {% endblock %}
