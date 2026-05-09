@@ -1,27 +1,48 @@
-# Implements a registration form using radio buttons
-
-from flask import Flask, render_template, request
+from flask import Flask, request
 
 app = Flask(__name__)
 
-SPORTS = [
-    "Basketball",
-    "Soccer",
-    "Ultimate Frisbee"
-]
+SPORTS = ["Soccer", "Basketball", "Tennis", "Volleyball"]
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html", sports=SPORTS)
+    # simple HTML with radio buttons
+    html = """
+    <h1>Register for a Sport</h1>
+
+    <form action="/register" method="post">
+
+        <input name="name" type="text" placeholder="Name">
+
+        <h3>Select a sport:</h3>
+    """
+
+    for sport in SPORTS:
+        html += f'''
+        <label>
+            <input type="radio" name="sport" value="{sport}">
+            {sport}
+        </label><br>
+        '''
+
+    html += """
+        <button type="submit">Register</button>
+    </form>
+    """
+
+    return html
 
 
 @app.route("/register", methods=["POST"])
 def register():
+    name = request.form.get("name")
+    sport = request.form.get("sport")
 
-    # Validate submission
-    if not request.form.get("name") or request.form.get("sport") not in SPORTS:
-        return render_template("failure.html")
+    if not name:
+        return "Registration failed: Name is required"
 
-    # Confirm registration
-    return render_template("success.html")
+    if sport not in SPORTS:
+        return "Registration failed: Invalid sport selected"
+
+    return f"Success! {name} registered for {sport}"
