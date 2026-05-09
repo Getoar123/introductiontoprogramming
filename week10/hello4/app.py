@@ -1,14 +1,8 @@
-# Uses parameter with same name as variable
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
 
-@app.route("/")
-def index():
-    if "name" in request.args:
-        name = request.args["name"]
-    else:
-        name = "world"
+@app.route("/<name>")
+def index(name):
     return render_template("index.html", name=name)
